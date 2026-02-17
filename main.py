@@ -2,6 +2,8 @@
 
 from ideology_engine import IdeologyEngine
 
+from psychology_engine import PsychologyEngine
+
 from fastapi import FastAPI, HTTPException
 from data import ANIME_DATABASE
 from models import UniverseAnalysis
@@ -21,6 +23,8 @@ app = FastAPI(
 similarity_engine = SimilarityEngine()
 
 ideology_engine = IdeologyEngine()
+
+psychology_engine = PsychologyEngine()
 
 # Simple in-memory cache
 analysis_cache = {}
@@ -101,6 +105,19 @@ def analyze_ideology(anime: str):
         **result
     }
 
+@app.get("/psychology")
+def analyze_psychology(anime: str):
+    anime_key = anime.lower()
+
+    if anime_key not in ANIME_DATABASE:
+        raise HTTPException(status_code=404, detail="Anime not found")
+
+    result = psychology_engine.analyze_psychology(anime_key)
+
+    return {
+        "universe": ANIME_DATABASE[anime_key]["title"],
+        **result
+    }
 
 # ----------------------------
 # ROOT CHECK ENDPOINT
