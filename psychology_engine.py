@@ -48,8 +48,17 @@ class PsychologyEngine:
         # ---------------------------
         # Extremism Potential
         # ---------------------------
-        extremism_score = round((rigidity_score * 0.6 + polarization * 0.4), 2)
-        extremism_score = min(extremism_score, 100)
+        liberation_keywords = ["Freedom", "Revolution", "Oppression"]
+        liberation_factor = sum(10 for theme in themes if theme in liberation_keywords)
+
+        extremism_score = (
+            rigidity_score * 0.35 +
+            polarization * 0.25 +
+            trauma_score * 0.25 +
+            power_index * 0.15
+        )
+
+        extremism_score = min(round(extremism_score, 2), 100)
 
         # ---------------------------
         # Cognitive Flexibility
