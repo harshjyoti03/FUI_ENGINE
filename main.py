@@ -1,5 +1,7 @@
 # main.py
 
+from collapse_engine import CollapseEngine
+
 from ideology_engine import IdeologyEngine
 
 from psychology_engine import PsychologyEngine
@@ -19,6 +21,8 @@ app = FastAPI(
 # ----------------------------
 # Global Engines (Loaded Once)
 # ----------------------------
+
+collapse_engine = CollapseEngine()
 
 similarity_engine = SimilarityEngine()
 
@@ -118,6 +122,21 @@ def analyze_psychology(anime: str):
         "universe": ANIME_DATABASE[anime_key]["title"],
         **result
     }
+
+@app.get("/collapse")
+def simulate_collapse(anime: str):
+    anime_key = anime.lower()
+
+    if anime_key not in ANIME_DATABASE:
+        raise HTTPException(status_code=404, detail="Anime not found")
+
+    result = collapse_engine.simulate(anime_key)
+
+    return {
+        "universe": ANIME_DATABASE[anime_key]["title"],
+        **result
+    }
+
 
 # ----------------------------
 # ROOT CHECK ENDPOINT
