@@ -1,5 +1,7 @@
 # main.py
 
+from ideology_engine import IdeologyEngine
+
 from fastapi import FastAPI, HTTPException
 from data import ANIME_DATABASE
 from models import UniverseAnalysis
@@ -17,6 +19,8 @@ app = FastAPI(
 # ----------------------------
 
 similarity_engine = SimilarityEngine()
+
+ideology_engine = IdeologyEngine()
 
 # Simple in-memory cache
 analysis_cache = {}
@@ -81,6 +85,20 @@ def get_similar_universes(anime: str):
     return {
         "selected_universe": ANIME_DATABASE[anime_key]["title"],
         "most_similar_universes": response
+    }
+
+@app.get("/ideology")
+def analyze_ideology(anime: str):
+    anime_key = anime.lower()
+
+    if anime_key not in ANIME_DATABASE:
+        raise HTTPException(status_code=404, detail="Anime not found")
+
+    result = ideology_engine.analyze_ideology(anime_key)
+
+    return {
+        "universe": ANIME_DATABASE[anime_key]["title"],
+        **result
     }
 
 
