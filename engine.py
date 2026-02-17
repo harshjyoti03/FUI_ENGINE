@@ -8,6 +8,7 @@ class UniverseEngine:
         power = self.calculate_power_inflation()
         plot = self.calculate_plot_armor()
         ideology = self.calculate_ideology_conflict()
+        complexity = self.calculate_thematic_complexity()
         stability = self.calculate_stability(power["value"], ideology["value"])
         risk = round((power["value"] + ideology["value"]) / 2, 2)
 
@@ -17,6 +18,7 @@ class UniverseEngine:
             "power_inflation": power,
             "plot_armor": plot,
             "ideology_conflict": ideology,
+            "thematic_complexity": complexity,
             "universe_stability": stability,
             "overall_risk_index": risk,
             "confidence_score": 0.82,
@@ -64,9 +66,25 @@ class UniverseEngine:
         score = sum(15 for theme in themes if theme in conflict_triggers)
         score = min(score, 100.0)
 
-        explanation = "Universe driven by strong ideological polarity." if score > 50 else "Ideological tension exists but not dominant."
+        explanation = (
+            "Universe driven by strong ideological polarity."
+            if score > 50
+            else "Ideological tension exists but not dominant."
+        )
 
         return {"value": score, "explanation": explanation}
+
+    def calculate_thematic_complexity(self):
+        theme_count = len(self.data["themes"])
+        value = min(theme_count * 12, 100)
+
+        explanation = (
+            "High thematic density increases ideological branching."
+            if value > 60
+            else "Moderate thematic complexity."
+        )
+
+        return {"value": value, "explanation": explanation}
 
     def calculate_stability(self, power, ideology):
         stability = 100 - ((power * 0.6) + (ideology * 0.4))
@@ -82,8 +100,9 @@ class UniverseEngine:
 
     def generate_summary(self, power, ideology, stability):
         return (
-            f"This universe exhibits a power escalation index of {power['value']} "
-            f"and ideological conflict intensity of {ideology['value']}. "
-            f"Stability analysis suggests a sustainability score of {stability['value']}. "
-            f"Primary systemic risk arises from concentrated power hierarchies."
+            f"This universe demonstrates a power inflation index of {power['value']} "
+            f"combined with ideological intensity of {ideology['value']}. "
+            f"System modeling indicates a sustainability score of {stability['value']}. "
+            f"Primary instability drivers include concentrated power hierarchies "
+            f"and ideological polarization."
         )

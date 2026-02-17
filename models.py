@@ -1,5 +1,3 @@
-# models.py
-
 from pydantic import BaseModel
 from typing import List
 
@@ -19,9 +17,9 @@ class UniverseAnalysis(BaseModel):
     power_inflation: ScoreDetail
     plot_armor: ScoreDetail
     ideology_conflict: ScoreDetail
+    thematic_complexity: ScoreDetail
     universe_stability: ScoreDetail
 
     overall_risk_index: float
     confidence_score: float
     executive_summary: str
-    ai_deep_analysis: str
